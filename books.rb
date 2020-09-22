@@ -52,6 +52,14 @@ def without_rating(book_array)
     book_array.select { |book| book.rating==0 }
 end
 
+def month_statistics(books)
+	books.sort_by {|book| book.date.month}
+	     .map {|book| (book.date.strftime('%B'))}.uniq
+    	 .map do |m|
+    	 	[m, books.select { |book| book.date.strftime('%B') == m}.size]
+    	 end
+end
+
 puts "5 longest books are #{ cool_print(array_sorted_by_pages(books).first(5)) }"
 
 puts "This books were written at 1847: #{ cool_print(books_in_year(books, 1847)) }"
@@ -62,11 +70,4 @@ puts "Authors list #{author_list_print(books)}"
 
 puts "There are #{cool_print(without_rating(books))} books without rating"
 
-def month_statistics(books)
-    books.sort_by {|book| book.date.month}
-		 .map {|book| (book.date.strftime('%B'))}.uniq
-    	 .map do |m|
-    		puts "There are #{books.select { |book| book.date.strftime('%B') == m}.size} books were written in #{m} "
-    end
-end
-month_statistics(books)
+puts "This is month statistic: #{month_statistics(books)}"
