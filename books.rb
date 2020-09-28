@@ -37,7 +37,7 @@ def books_in_year (book_array, year)
 	book_array.select {|book| book.date.year==year}
 end
 
-def novels(book_array)
+def find_all_novels(book_array)
 	book_array.select {|book| book.genres.include?("Novels")}
 	.sort_by{ |book| book.date }
 end
@@ -64,7 +64,7 @@ puts "5 longest books are #{ cool_print(array_sorted_by_pages(books).first(5)) }
 
 puts "This books were written at 1847: #{ cool_print(books_in_year(books, 1847)) }"
 
-puts "This is 10 the oldes novels #{cool_print(novels(books).first(10))}"
+puts "This is 10 the oldes novels #{cool_print(find_all_novels(books).first(10))}"
 
 puts "Authors list #{author_list_print(books)}"
 
