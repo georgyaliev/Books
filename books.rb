@@ -3,11 +3,11 @@ require 'ostruct'
 require 'date'
 
 def make_date(date)
-	if (date.size>4) 
+	if (date.size>4)
 		Date.parse(date)
 	else (date.size<5)
-  	Date.parse("01-01"+date) 
-	end
+		Date.parse("01-01"+date) 
+		end
 end
 
 def make_openstruct(book_array)
@@ -71,3 +71,5 @@ puts "Authors list #{author_list_print(books)}"
 puts "There are #{cool_print(without_rating(books))} books without rating"
 
 puts "This is month statistic: #{month_statistics(books)}"
+
+
