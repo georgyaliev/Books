@@ -6,7 +6,7 @@ def make_date(date)
   if (date.size>4) 
     Date.parse(date)
   else (date.size<5)
-    Date.parse("01-01"+date) 
+    Date.parse( "01-01" + date ) 
   end
 end
 
@@ -29,44 +29,43 @@ def cool_print(book)
   "The book #{book.title} was written by #{book.author} at #{book.date} in #{book.genres} has #{book.pages} pages and #{book.rating} rating"
 end
 
-def array_sorted_by_pages(book_array)
-  book_array.sort_by { |book| book.pages }.reverse 
+def search(book_array, parameter, *y)
+    case parameter
+    when "month_statistics"
+      book_array.sort_by { |book| book.date.month }
+             .map { |book| (book.date.strftime('%B')) }.uniq
+             .map do |m|
+              [m, book_array.select { |book| book.date.strftime('%B') == m }.size]
+             end
+             
+    when "without_rating"
+      book_array.select { |book| book.rating==0 }
+
+    when "author_list"
+      book_array.map{ |book| book.author.split(' ') }
+                .sort_by{ |name| name.last }
+                .uniq
+
+    when "find_all_novels"
+      book_array.select { |book| book.genres.include?("Novels")}
+
+    when "books_in_year"
+      book_array.select { |book| book.date.year == y[0]}
+
+    when "sort_by_pages"
+      book_array.sort_by { |book| book.pages }.reverse
+
+  end
 end
 
-def books_in_year (book_array, year)
-  book_array.select {|book| book.date.year==year}
-end
+puts "5 longest books are #{ search(books, "sort_by_pages").first(5).map{ |book| cool_print(book)} }"
 
-def find_all_novels(book_array)
-  book_array.select {|book| book.genres.include?("Novels")}
-end
+puts "This books were written at 1847: #{ search(books, "books_in_year", 1847).map {|book| cool_print(book) } }"
 
-def author_list_print(book_array)
-  book_array.map{ |book| book.author.split(' ') }
-            .sort_by{ |name| name.last }
-            .uniq
-end
+puts "This is 10 the oldes novels #{ search(books, "find_all_novels").sort_by{ |book| book.date }.first(10).map{|book| cool_print(book)}}"
 
-def without_rating(book_array)
-  book_array.select { |book| book.rating==0 }
-end
+puts "Authors list #{ search(books, "author_list") }"
 
-def month_statistics(books)
-  books.sort_by {|book| book.date.month}
-       .map {|book| (book.date.strftime('%B'))}.uniq
-       .map do |m|
-        [m, books.select { |book| book.date.strftime('%B') == m}.size]
-       end
-end
+puts "This books haven't rating #{search(books, "without_rating").map{|book| cool_print(book)}}"
 
-puts "5 longest books are #{ array_sorted_by_pages(books).first(5).map{ |book| cool_print(book)} }"
-
-puts "This books were written at 1847: #{ books_in_year(books, 1847).map {|book| cool_print(book) } }"
-
-puts "This is 10 the oldes novels #{find_all_novels(books).sort_by{ |book| book.date }.first(10).map{|book| cool_print(book)}}"
-
-puts "Authors list #{ author_list_print(books) }"
-
-puts "This books haven't rating #{ without_rating(books).map{|book| cool_print(book)} } "
-
-puts "This is month statistic: #{month_statistics(books)}"
+puts "This is month statistic: #{search(books, "month_statistics")}"
